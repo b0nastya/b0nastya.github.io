@@ -1,67 +1,41 @@
-<!DOCTYPE html>
 <html>
   <head>
-    <meta charset="utf-8">
-    <title>Raspberry AR1</title>
-    <meta name="description" content="Raspberry AR demo using A-Frame and MindAR.">
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <script src="https://aframe.io/releases/1.4.1/aframe.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.1/dist/mindar-image-aframe.prod.js"></script>
-    <script>
-      AFRAME.registerComponent('markerhandler', {
-        init: function () {
-          this.markerCounter = 0;
-          this.markerMaxCount = 10;
-
-          this.mindARLibrary = new mindAR.MindAR(document.querySelector('canvas'));
-
-          this.mindARLibrary.start('targets.mind');
-          this.mindARLibrary.addEventListener('markerFound', this.onMarkerFound.bind(this));
-        },
-
-        onMarkerFound: function (marker) {
-          var sceneEl = document.querySelector('a-scene');
-
-          if (this.markerCounter < this.markerMaxCount) {
-            // Create a random size
-            var scale = ((Math.random() * 2) + 1) / 10;
-
-            // Create a random rotation
-            var rotation = {
-              x: (Math.random() * 360),
-              y: (Math.random() * 360),
-              z: (Math.random() * 360)
-            };
-
-            // Create a random position offset from the marker
-            var positionOffset = {
-              x: ((Math.random() * 4) - 2),
-              y: ((Math.random() * 4) - 2),
-              z: ((Math.random() * 4) - 2)
-            };
-
-            // Create the model entity
-            var modelEl = document.createElement('a-entity');
-            modelEl.setAttribute('gltf-model', 'ruspberry.gltf');
-            modelEl.setAttribute('scale', { x: scale, y: scale, z: scale });
-            modelEl.setAttribute('rotation', rotation);
-            modelEl.setAttribute('position', {
-              x: marker.position.x + positionOffset.x,
-              y: marker.position.y + positionOffset.y,
-              z: marker.position.z + positionOffset.z
-            });
-
-            // Add the model entity to the scene
-            sceneEl.appendChild(modelEl);
-
-            this.markerCounter++;
-          }
-        }
-      });
-    </script>
   </head>
   <body>
-    <a-scene markerhandler embedded>
-      <a-camera></a-camera>
+    <a-scene mindar-image="imageTargetSrc: targets.mind; warmupTolerance: 2; filterMinCF:0.1; filterBeta: 10; " vr-mode-ui="enabled: false" device-orientation-permission-ui="enabled: false">
+     <a-assets>
+        <img id="card" src="https://cdn.jsdelivr.net/gh/hiukim/mind-ar-js@1.2.1/examples/image-tracking/assets/card-example/card.png" />
+        <a-asset-item id="ruspModel" src="raspberry.gltf"></a-asset-item>
+      </a-assets>
+      <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
+      <a-entity mindar-image-target="targetIndex: 0">
+        <a-gltf-model rotation="0 0 0" position="0 0 0.1" scale="0.05 0.05 0.05" src="#ruspModel" animation="property: position; to: 0 0.1 0.1; dur: 1000; easing: easeInOutQuad; loop: true; dir: alternate">
+        <a-gltf-model rotation="0 0 45 " position="0 0 2" scale="0.08 0.08 0.08" src="#ruspModel" animation="property: position; to: 0.5 0 2; dur: 1000; easing: easeInOutQuad; loop: true; dir: alternate">
+          
+      </a-entity>
     </a-scene>
+       
+    <script type="application/javascript">
+    let rotation = {
+        x: (Math.round(Math.random() * 360)),
+        y: (Math.round(Math.random() * 360)),
+        z: (Math.round(Math.random() * 360))
+    };
+
+    let els = document.getElementsByTagName("a-gltf-model");
+    for (let i = 0; i < els.length; i++) {
+        els[i].setAttribute("rotation", `${rotation.x} ${rotation.y} ${rotation.z}`)
+        rotation = {
+            x: (Math.round(Math.random() * 360)),
+            y: (Math.round(Math.random() * 360)),
+            z: (Math.round(Math.random() * 360))
+        };
+    }
+    </script>    
+        
+    
   </body>
 </html>
