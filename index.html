@@ -4,40 +4,40 @@
     <title>Raspberry AR6</title>
     <script src="https://aframe.io/releases/1.4.1/aframe.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.1/dist/mindar-image-aframe.prod.js"></script>
+    
+    <script>
+    AFRAME.registerComponent('modify-materials', {
+      init: function () {
+        // Wait for model to load.
+        this.el.addEventListener('model-loaded', () => {
+          // Grab the mesh / scene.
+          const obj = this.el.getObject3D('mesh');
+          // Go over the submeshes and modify materials we want.
+          obj.traverse(node => {
+            node.material.color.set('red');
+            if (node.name.indexOf('ship') !== -1) {
+              node.material.color.set('red');
+            }
+          });
+        });
+      }
+    });
+  </script>
+  
+  
   </head>
   <body>
-    <a-scene mindar-image="imageTargetSrc: targets.mind; warmupTolerance: 2; filterMinCF:0.1; filterBeta: 10; " vr-mode-ui="enabled: false" device-orientation-permission-ui="enabled: false">
+    <a-scene mindar-image="imageTargetSrc: https://cdn.glitch.global/065d4cfe-e336-494b-bd3c-fb9c9af2f7e8/targets.mind?v=1682937652030; warmupTolerance: 2; filterMinCF:0.1; filterBeta: 10; " vr-mode-ui="enabled: false" device-orientation-permission-ui="enabled: false">
      <a-assets>
         <img id="card" src="https://cdn.jsdelivr.net/gh/hiukim/mind-ar-js@1.2.1/examples/image-tracking/assets/card-example/card.png" />
-        <a-asset-item id="ruspModel" src="raspberry.gltf"></a-asset-item>
+        <a-asset-item id="ruspModel" src="https://cdn.glitch.global/065d4cfe-e336-494b-bd3c-fb9c9af2f7e8/ruspliteFux.glb?v=1682949852240"></a-asset-item>
       </a-assets>
       <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
       
       <a-entity mindar-image-target="targetIndex: 0">
-        <a-gltf-model rotation="0 0 0" position="0 0 0.1" scale="0.05 0.05 0.05" src="#ruspModel" animation="property: position; to: 0 0.1 0.1; dur: 1000; easing: easeInOutQuad; loop: true; dir: alternate" />
-        <a-gltf-model rotation="0 0 45" position="0 0 0.1" scale="0.05 0.05 0.05" src="#ruspModel" animation="property: position; to: 0.1 0 0.1; dur: 1000; easing: easeInOutQuad; loop: true; dir: alternate" />
+        <a-gltf-model rotation="45 45 0" position="0 0 0.1" scale="0.1 0.1 0.1" src="#ruspModel" animation="property: position; to: 0 0.1 0.1; dur: 1000; easing: easeInOutQuad; loop: true; dir: alternate"></a-gltf-model>
       </a-entity>
-
     </a-scene>
        
-    <script type="application/javascript">
-    let rotation = {
-        x: (Math.round(Math.random() * 360)),
-        y: (Math.round(Math.random() * 360)),
-        z: (Math.round(Math.random() * 360))
-    };
-
-    let els = document.getElementsByTagName("a-gltf-model");
-    for (let i = 0; i < els.length; i++) {
-        els[i].setAttribute("rotation", `${rotation.x} ${rotation.y} ${rotation.z}`)
-        rotation = {
-            x: (Math.round(Math.random() * 360)),
-            y: (Math.round(Math.random() * 360)),
-            z: (Math.round(Math.random() * 360))
-        };
-    }
-    </script>    
-        
-    
   </body>
 </html>
