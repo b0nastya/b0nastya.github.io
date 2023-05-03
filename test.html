@@ -1,0 +1,41 @@
+<html>
+ <head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <title>Пример</title>
+ </head>
+ <body>
+  <h1>Заголовок</h1>
+  <!-- выпадающий список -->
+  <select id="select-value">
+    <option value="value1">Значение 1</option>
+    <option value="value2">Значение 2</option>
+    <option value="value3">Значение 3</option>
+  </select>
+  <!-- контейнер для отображения текущего значения -->
+  <div id="current-value"></div>
+
+    <script type="application/javascript">
+        // обработчик изменения значения в выпадающем списке
+        $('#select-value').on('change', function() {
+          var selectedValue = $(this).val();
+          $.ajax({
+            url: 'update_value.php',
+            method: 'POST',
+            dataType: 'html',
+            data: {value: selectedValue},
+            success: function(response) {
+              $('#current-value').html(response); // обновляем значение текущего значения на странице
+            }
+          });
+        });  
+    </script>
+   
+ </body>
+</html>
+
+
+
+
+
+
+
